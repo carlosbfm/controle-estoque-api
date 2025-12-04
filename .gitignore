@@ -1,0 +1,32 @@
+### 1. Build e Compilação (O que o Maven gera) ###
+/target/
+/build/
+*.class
+*.jar
+*.war
+*.ear
+
+### 2. Logs e Arquivos Temporários ###
+*.log
+logs/
+.DS_Store
+
+### 3. Configurações de IDE (VS Code, IntelliJ, Eclipse) ###
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+.sts4-cache/
+
+### 4. SEGURANÇA (CRUCIAL - Não envia senhas) ###
+*.env
+application.yml
+application.properties
+
+### 5. DOCKER (Não envia os dados do banco) ###
+/postgres_data/
+/data/
