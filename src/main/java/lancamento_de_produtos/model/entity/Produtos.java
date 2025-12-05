@@ -36,5 +36,5 @@ public class Produtos {
     private BigDecimal priceCost;
 
     @Column(name = "preco_venda", precision = 18, scale = 2)
-    private BigDecimal pricesSale;
+    private BigDecimal priceSale;
 }

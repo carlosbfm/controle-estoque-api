@@ -3,8 +3,7 @@ package lancamento_de_produtos.model.entity;
 
 import java.time.LocalDate;
 
-import org.springframework.data.annotation.Id;
-
+import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
