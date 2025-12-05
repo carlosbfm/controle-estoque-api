@@ -15,10 +15,10 @@ public interface ProdutosRepository extends  JpaRepository<Produtos, UUID>{
 
     List<Produtos>  findByName(String name);
 
+    boolean existsByName(String name);
+
     List<Produtos>  findByPriceSale(BigDecimal priceSale);
 
     List<Produtos>  findByPriceCost(BigDecimal priceCost);
-
-    
 
 }
