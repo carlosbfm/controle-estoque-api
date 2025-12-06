@@ -12,7 +12,11 @@ public interface FuncionariosRepository extends JpaRepository<Funcionarios, Long
 
     Optional<Funcionarios> findByRegistration(String registration);
 
+    boolean existsByRegistration(String registration);
+
     List<Funcionarios> findByNameContainingIgnoreCase(String name);
 
     List<Funcionarios> findByPosition(CargoFuncionario position);
+
+
 }

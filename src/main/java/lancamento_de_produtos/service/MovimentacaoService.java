@@ -1,6 +1,10 @@
 package lancamento_de_produtos.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,5 +63,47 @@ public class MovimentacaoService {
         mov.setDateRegister(LocalDateTime.now());
         
         return movimentacaoRepo.save(mov);
+    }
+
+    public List<Movimentacao> buscarPorProduto(UUID idProduto) {
+        Produtos produto = produtoRepo.findById(idProduto)
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado."));
+        return movimentacaoRepo.findByProduct(produto);
+    }
+
+    public List<Movimentacao> buscarPorMatricula(String matricula) {
+        Funcionarios funcionario = funcionarioRepo.findByRegistration(matricula)
+                .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado."));
+        return movimentacaoRepo.findByEmployee(funcionario);
+    }
+
+    public List<Movimentacao> buscarPorTipo(TipoMovimentacao tipo) {
+        return movimentacaoRepo.findByType(tipo);
+    }
+
+    public List<Movimentacao> buscarPorData(LocalDate data) {
+        LocalDateTime inicio = data.atStartOfDay();
+        LocalDateTime fim = data.atTime(LocalTime.MAX);
+        return movimentacaoRepo.findByDateRegisterBetween(inicio, fim);
+    }
+
+    @Transactional
+    public void deletar(Long id) {
+        Movimentacao mov = movimentacaoRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Movimentação não encontrada."));
+
+        Produtos product = mov.getProduct();
+
+        if (mov.getType() == TipoMovimentacao.ENTRADA) {
+            if (product.getQuantity() < mov.getQuantity()) {
+                throw new IllegalArgumentException("Não é possível cancelar a entrada: estoque atual insuficiente para o estorno.");
+            }
+            product.setQuantity(product.getQuantity() - mov.getQuantity());
+        } else {
+            product.setQuantity(product.getQuantity() + mov.getQuantity());
+        }
+
+        produtoRepo.save(product);
+        movimentacaoRepo.delete(mov);
     }
 }

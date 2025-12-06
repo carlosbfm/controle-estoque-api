@@ -13,7 +13,7 @@ public interface ProdutosRepository extends  JpaRepository<Produtos, UUID>{
     
     Optional<Produtos> findById(UUID id);
 
-    List<Produtos>  findByName(String name);
+    List<Produtos>  findByNameContainingIgnoreCase(String name);
 
     boolean existsByName(String name);
 
