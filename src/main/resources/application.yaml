@@ -1,11 +1,21 @@
 spring:
   application:
     name: lancamento_de_produtos
+  
+  docker:
+    compose:
+      enabled: false
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres_produtos
+    url: jdbc:postgresql://localhost:5432/produtos
     username: admin
     password: admin
     driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: produtos-db-pool  
+      minimum-idle: 1
+      connection-timeout: 20000
+      max-lifetime: 1800000
   jpa:
     hibernate:
       ddl-auto: update
