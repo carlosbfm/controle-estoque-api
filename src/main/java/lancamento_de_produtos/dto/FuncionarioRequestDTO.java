@@ -8,9 +8,6 @@ import jakarta.validation.constraints.Size;
 import lancamento_de_produtos.model.enums.CargoFuncionario;
 
 public record FuncionarioRequestDTO(  
-    @NotBlank(message = "Matrícula é obrigatória")
-    @Size(max = 10, message = "Matrícula deve ter no máximo 10 caracteres")
-    String registration,
 
     @NotBlank(message = "Nome é obrigatório")
     @Size(max = 150)
@@ -20,6 +17,5 @@ public record FuncionarioRequestDTO(
     CargoFuncionario position,
 
     @NotNull(message = "Data de nascimento é obrigatória")
-    LocalDate dateBith) {
-  
-}
+    LocalDate dateBith) 
+    {}

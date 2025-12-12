@@ -15,6 +15,7 @@ import lancamento_de_produtos.model.entity.Produtos;
 import lancamento_de_produtos.model.enums.TipoMovimentacao;
 
 public interface MovimentacaoRepository extends JpaRepository<Movimentacao, Long>{
+    
 
     Optional<Movimentacao> findById (Long id);
     

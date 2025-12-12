@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum CargoFuncionario {
     
-    ASSISTENTE("Assistente"),
+    ASSISTENTE("Assistente Administrativo"),
     GERENTE("Gerente"),
     COORDENADOR("Coordenador"),
     ESTAGIARIO("Estagiário"),

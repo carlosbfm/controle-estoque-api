@@ -1,20 +1,11 @@
 package lancamento_de_produtos.controller;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lancamento_de_produtos.dto.ProdutoRequestDTO;
 import lancamento_de_produtos.model.entity.Produtos;
@@ -37,9 +28,9 @@ public class ProdutoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novoProduto);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Produtos> buscarPorId(@PathVariable UUID id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
+    @GetMapping("/{codigo}")
+    public ResponseEntity<Produtos> buscarPorCodigo(@PathVariable String codigo) {
+        return ResponseEntity.ok(service.buscarPorCodigo(codigo));
     }
 
     @GetMapping("/pesquisar")
@@ -47,39 +38,39 @@ public class ProdutoController {
         return ResponseEntity.ok(service.buscarPorNome(nome));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
-        service.deletar(id);
+    @PatchMapping("/{codigo}/nome")
+    public ResponseEntity<Void> atualizarNome(@PathVariable String codigo, @RequestBody ProdutoRequestDTO dto) {
+        service.atualizarNome(codigo, dto.name());
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/nome")
-    public ResponseEntity<Void> atualizarNome(@PathVariable UUID id, @RequestBody ProdutoRequestDTO dto) {
-        service.atualizarNome(id, dto.name());
+    @PatchMapping("/{codigo}/descricao")
+    public ResponseEntity<Void> atualizarDescricao(@PathVariable String codigo, @RequestBody ProdutoRequestDTO dto) {
+        service.atualizarDescricao(codigo, dto.description());
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/descricao")
-    public ResponseEntity<Void> atualizarDescricao(@PathVariable UUID id, @RequestBody ProdutoRequestDTO dto) {
-        service.atualizarDescricao(id, dto.description());
+    @PatchMapping("/{codigo}/preco-custo")
+    public ResponseEntity<Void> atualizarPrecoCusto(@PathVariable String codigo, @RequestBody ProdutoRequestDTO dto) {
+        service.atualizarPrecoCusto(codigo, dto.priceCost());
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/preco-venda")
-    public ResponseEntity<Void> atualizarPrecoVenda(@PathVariable UUID id, @RequestBody ProdutoRequestDTO dto) {
-        service.atualizarPrecoVenda(id, dto.priceSale());
+    @PatchMapping("/{codigo}/preco-venda")
+    public ResponseEntity<Void> atualizarPrecoVenda(@PathVariable String codigo, @RequestBody ProdutoRequestDTO dto) {
+        service.atualizarPrecoVenda(codigo, dto.priceSale());
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/preco-custo")
-    public ResponseEntity<Void> atualizarPrecoCusto(@PathVariable UUID id, @RequestBody ProdutoRequestDTO dto) {
-        service.atualizarPrecoCusto(id, dto.priceCost());
+    @PatchMapping("/{codigo}/estoque")
+    public ResponseEntity<Void> atualizarEstoque(@PathVariable String codigo, @RequestBody ProdutoRequestDTO dto) {
+        service.atualizarQuantidadeEstoque(codigo, dto.quantity());
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/estoque")
-    public ResponseEntity<Void> atualizarEstoque(@PathVariable UUID id, @RequestBody ProdutoRequestDTO dto) {
-        service.atualizarQuantidadeEstoque(id, dto.quantity());
+    @DeleteMapping("/{codigo}")
+    public ResponseEntity<Void> deletar(@PathVariable String codigo) {
+        service.deletar(codigo);
         return ResponseEntity.noContent().build();
     }
 }

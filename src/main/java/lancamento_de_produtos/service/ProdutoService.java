@@ -2,7 +2,6 @@ package lancamento_de_produtos.service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,19 +27,25 @@ public class ProdutoService {
         }
 
         Produtos prod = new Produtos();
+
+        String codigoGerado;
+        do {
+            codigoGerado = lancamento_de_produtos.utils.GeradorCodigo.gerarCodigoProduto(6);
+        } while (repository.existsById(codigoGerado));
+
+        prod.setCodigo(codigoGerado);
         prod.setName(dto.name());
-        prod.setDescription(dto.name());
+        prod.setDescription(dto.description());
         prod.setPriceCost(dto.priceCost());
         prod.setPriceSale(dto.priceSale());
-        
-        prod.setQuantity(0);
+        prod.setQuantity(dto.quantity());
 
         return repository.save(prod);
     }
 
     @Transactional
-    public void atualizarNome(UUID id, String novoNome) {
-        Produtos produto = repository.findById(id)
+    public void atualizarNome(String codigo, String novoNome) {
+        Produtos produto = repository.findById(codigo)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado."));
 
         if (!produto.getName().equals(novoNome) && repository.existsByName(novoNome)) {
@@ -52,8 +57,8 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void atualizarPrecoVenda(UUID id, BigDecimal novoPreco) {
-        Produtos produto = repository.findById(id)
+    public void atualizarPrecoVenda(String codigo, BigDecimal novoPreco) {
+        Produtos produto = repository.findById(codigo)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado."));
         
         if (novoPreco.compareTo(BigDecimal.ZERO) < 0) {
@@ -65,8 +70,8 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void atualizarPrecoCusto(UUID id, BigDecimal novoCusto) {
-        Produtos produto = repository.findById(id)
+    public void atualizarPrecoCusto(String codigo, BigDecimal novoCusto) {
+        Produtos produto = repository.findById(codigo)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado."));
 
         if (novoCusto.compareTo(BigDecimal.ZERO) < 0) {
@@ -78,8 +83,8 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void atualizarQuantidadeEstoque(UUID id, Integer novaQuantidade) {
-        Produtos produto = repository.findById(id)
+    public void atualizarQuantidadeEstoque(String codigo, Integer novaQuantidade) {
+        Produtos produto = repository.findById(codigo)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado."));
 
         if (novaQuantidade < 0) {
@@ -91,16 +96,16 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void atualizarDescricao(UUID id, String novaDescricao) {
-        Produtos produto = repository.findById(id)
+    public void atualizarDescricao(String codigo, String novaDescricao) {
+        Produtos produto = repository.findById(codigo)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado."));
 
         produto.setDescription(novaDescricao);
         repository.save(produto);
     }
 
-    public Produtos buscarPorId(UUID id) {
-        return repository.findById(id)
+    public Produtos buscarPorCodigo(String codigo) {
+        return repository.findById(codigo)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado."));
     }
 
@@ -109,8 +114,8 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void deletar(UUID id) {
-        Produtos produto = repository.findById(id)
+    public void deletar(String codigo) {
+        Produtos produto = repository.findById(codigo)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado."));
         
         repository.delete(produto);

@@ -54,13 +54,13 @@ public class FuncionarioController {
     }
 
     @PutMapping("/{matricula}")
-    public ResponseEntity<Funcionarios> atualizar(@PathVariable String matricula, @RequestBody FuncionarioRequestDTO dto) {
+    public ResponseEntity<Funcionarios> atualizarPorMatricula(@PathVariable String matricula, @RequestBody FuncionarioRequestDTO dto) {
         Funcionarios atualizado = service.atualizarPorMatricula(matricula, dto);
         return ResponseEntity.ok(atualizado);
     }
 
     @PatchMapping("/cargo/{cargoAlvo}")
-    public ResponseEntity<Void> atualizarEmMassa(@PathVariable CargoFuncionario cargoAlvo, @RequestBody FuncionarioRequestDTO dto) {
+    public ResponseEntity<Void> atualizarPorCargo(@PathVariable CargoFuncionario cargoAlvo, @RequestBody FuncionarioRequestDTO dto) {
         service.atualizarPorPosicao(cargoAlvo, dto);
         return ResponseEntity.noContent().build();
     }

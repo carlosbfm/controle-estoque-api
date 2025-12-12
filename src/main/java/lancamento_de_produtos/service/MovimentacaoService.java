@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,17 +35,15 @@ public class MovimentacaoService {
 
     @Transactional
     public Movimentacao registrar(MovimentacaoRequestDTO dto) {
-      
         Produtos product = produtoRepo.findById(dto.productId())
-            .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
-        
-        Funcionarios employee = funcionarioRepo.findById(dto.employeeId())
-            .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+
+        Funcionarios employee = funcionarioRepo.findByRegistration(dto.employeeRegistration())
+                .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado"));
 
         if (dto.type() == TipoMovimentacao.ENTRADA) {
             product.setQuantity(product.getQuantity() + dto.quantity());
-        } 
-        else {
+        } else {
             if (product.getQuantity() < dto.quantity()) {
                 throw new IllegalArgumentException("Estoque insuficiente.");
             }
@@ -60,17 +57,18 @@ public class MovimentacaoService {
         mov.setEmployee(employee);
         mov.setQuantity(dto.quantity());
         mov.setType(dto.type());
-        mov.setDateRegister(LocalDateTime.now());
-        
+        mov.setDateRegister(java.time.LocalDateTime.now());
+
         return movimentacaoRepo.save(mov);
     }
 
-    public List<Movimentacao> buscarPorProduto(UUID idProduto) {
-        Produtos produto = produtoRepo.findById(idProduto)
+    public List<Movimentacao> buscarPorProduto(String codigoProduto) {
+        Produtos produto = produtoRepo.findById(codigoProduto)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado."));
+        
         return movimentacaoRepo.findByProduct(produto);
     }
-
+    
     public List<Movimentacao> buscarPorMatricula(String matricula) {
         Funcionarios funcionario = funcionarioRepo.findByRegistration(matricula)
                 .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado."));

@@ -3,12 +3,8 @@ package lancamento_de_produtos.model.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
-import java.util.UUID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -19,9 +15,8 @@ import jakarta.persistence.Table;
 public class Produtos {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id_produto")
-    private UUID id;
+    @Column(name = "codigo_estoque")
+    private String codigo;
 
     @Column(name = "nome_do_produto", length = 100, nullable = false)
     private String name;

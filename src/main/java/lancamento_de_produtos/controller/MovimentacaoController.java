@@ -2,7 +2,6 @@ package lancamento_de_produtos.controller;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -39,11 +38,7 @@ public class MovimentacaoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novaMovimentacao);
     }
 
-    @GetMapping("/produto/{idProduto}")
-    public ResponseEntity<List<Movimentacao>> buscarPorProduto(@PathVariable UUID idProduto) {
-        return ResponseEntity.ok(service.buscarPorProduto(idProduto));
-    }
-
+    
     @GetMapping("/funcionario/{matricula}")
     public ResponseEntity<List<Movimentacao>> buscarPorMatricula(@PathVariable String matricula) {
         return ResponseEntity.ok(service.buscarPorMatricula(matricula));

@@ -7,8 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import lancamento_de_produtos.model.converter.CargoFuncionarioConverter;
 import lancamento_de_produtos.model.enums.CargoFuncionario;
@@ -22,9 +20,6 @@ import lombok.Setter;
 public class Funcionarios {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(name = "matricula", unique = true, length = 10, nullable = false)
     private String registration;
 
