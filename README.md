@@ -19,12 +19,27 @@ API REST desenvolvida em **Java 21** e **Spring Boot** focada na gestão eficien
 
 ## 📝 Sobre o Projeto
 
-Este sistema foi projetado para controlar o fluxo de mercadorias e o cadastro de colaboradores, com foco em regras de negócio sólidas:
+Este projeto consiste em uma **API RESTful** robusta projetada para modernizar a gestão de almoxarifados e estoques comerciais. O objetivo principal é atuar como o backend centralizado para substituir controles manuais ou baseados em planilhas, oferecendo um sistema seguro, auditável e escalável.
 
-* **Gestão de Produtos:** Cadastro com geração automática de código identificador (SKU) e controle preciso de preços (`BigDecimal`).
-* **Rastreabilidade:** Todas as movimentações (Entrada/Saída) são vinculadas a um funcionário através de sua **Matrícula** e ao produto através do seu **Código**, sem expor IDs numéricos de banco de dados.
-* **Auditoria:** Registro automático de data de criação e atualização nas movimentações.
+O sistema controla o ciclo de vida completo dos produtos, desde o cadastro inteligente até a saída para venda ou consumo interno, garantindo que cada operação tenha um responsável claro.
 
+### Pilares do Sistema:
+
+* 📦 **Gestão Inteligente de Estoque:**
+    * Cadastro com geração automática de **SKUs** (Stock Keeping Units) únicos no padrão `ABC123`, eliminando erros humanos de digitação.
+    * Precificação de alta precisão utilizando `BigDecimal`, essencial para evitar erros de arredondamento financeiro em relatórios de custo e venda.
+
+* 🔍 **Rastreabilidade Total:**
+    * Diferente de sistemas simples, aqui toda movimentação (Entrada/Saída) é estritamente vinculada a um **Funcionário (via Matrícula)** e a um **Produto (via Código)**.
+    * Isso garante que o sistema saiba exatamente *quem* movimentou *o quê* e *quando*, sem expor IDs internos do banco de dados.
+
+* 🛡️ **Qualidade e Integridade de Dados:**
+    * Uso rigoroso de **Bean Validation** (`@NotNull`, `@NotBlank`) para impedir a entrada de dados inconsistentes ("lixo") no banco.
+    * Auditoria automática com timestamps de criação e atualização (`@CreatedDate`, `@LastModifiedDate`) em todos os registros críticos.
+
+* 🏗️ **Arquitetura Profissional:**
+    * Estruturado em camadas (Controllers, Services, Repositories) seguindo princípios de **Clean Code**.
+    * Uso estratégico de **DTOs (Data Transfer Objects)** para desacoplar o banco de dados da API, entregando respostas rápidas e seguras.
 ---
 
 ## 💡 Destaques Técnicos
