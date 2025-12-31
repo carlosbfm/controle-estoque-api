@@ -3,7 +3,6 @@ package lancamento_de_produtos.controller;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +19,14 @@ import lancamento_de_produtos.dto.MovimentacaoRequestDTO;
 import lancamento_de_produtos.model.entity.Movimentacao;
 import lancamento_de_produtos.model.enums.TipoMovimentacao;
 import lancamento_de_produtos.service.MovimentacaoService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/movimentacoes")
+@RequiredArgsConstructor
 public class MovimentacaoController {
 
     private final MovimentacaoService service;
-
-    @Autowired
-    public MovimentacaoController(MovimentacaoService service) {
-        this.service = service;
-    }
 
     @PostMapping
     public ResponseEntity<Movimentacao> registrar(@RequestBody MovimentacaoRequestDTO dto) {
@@ -38,7 +34,6 @@ public class MovimentacaoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novaMovimentacao);
     }
 
-    
     @GetMapping("/funcionario/{matricula}")
     public ResponseEntity<List<Movimentacao>> buscarPorMatricula(@PathVariable String matricula) {
         return ResponseEntity.ok(service.buscarPorMatricula(matricula));

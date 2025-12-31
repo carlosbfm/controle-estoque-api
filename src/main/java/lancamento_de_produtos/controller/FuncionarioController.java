@@ -2,12 +2,10 @@ package lancamento_de_produtos.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,17 +18,14 @@ import lancamento_de_produtos.dto.FuncionarioRequestDTO;
 import lancamento_de_produtos.model.entity.Funcionarios;
 import lancamento_de_produtos.model.enums.CargoFuncionario;
 import lancamento_de_produtos.service.FuncionarioService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/funcionarios")
+@RequiredArgsConstructor
 public class FuncionarioController {
     
     private final FuncionarioService service;
-
-    @Autowired
-    public FuncionarioController(FuncionarioService service) {
-        this.service = service;
-    }
 
     @PostMapping
     public ResponseEntity<Funcionarios> cadastrar(@RequestBody FuncionarioRequestDTO dto) {
@@ -57,12 +52,6 @@ public class FuncionarioController {
     public ResponseEntity<Funcionarios> atualizarPorMatricula(@PathVariable String matricula, @RequestBody FuncionarioRequestDTO dto) {
         Funcionarios atualizado = service.atualizarPorMatricula(matricula, dto);
         return ResponseEntity.ok(atualizado);
-    }
-
-    @PatchMapping("/cargo/{cargoAlvo}")
-    public ResponseEntity<Void> atualizarPorCargo(@PathVariable CargoFuncionario cargoAlvo, @RequestBody FuncionarioRequestDTO dto) {
-        service.atualizarPorPosicao(cargoAlvo, dto);
-        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{matricula}")

@@ -2,7 +2,6 @@ package lancamento_de_produtos.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,17 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import lancamento_de_produtos.dto.ProdutoRequestDTO;
 import lancamento_de_produtos.model.entity.Produtos;
 import lancamento_de_produtos.service.ProdutoService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/produtos")
+@RequiredArgsConstructor
 public class ProdutoController {
 
     private final ProdutoService service;
-
-    @Autowired
-    public ProdutoController(ProdutoService service) {
-        this.service = service;
-    }
 
     @PostMapping
     public ResponseEntity<Produtos> cadastrar(@RequestBody ProdutoRequestDTO dto) {

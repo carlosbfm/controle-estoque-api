@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
 import lancamento_de_produtos.dto.MovimentacaoRequestDTO;
+import lancamento_de_produtos.mapper.MovimentacaoMapper;
 import lancamento_de_produtos.model.entity.Funcionarios;
 import lancamento_de_produtos.model.entity.Movimentacao;
 import lancamento_de_produtos.model.entity.Produtos;
@@ -17,48 +17,33 @@ import lancamento_de_produtos.model.enums.TipoMovimentacao;
 import lancamento_de_produtos.repository.FuncionariosRepository;
 import lancamento_de_produtos.repository.MovimentacaoRepository;
 import lancamento_de_produtos.repository.ProdutosRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class MovimentacaoService {
+    
     private final MovimentacaoRepository movimentacaoRepo;
     private final ProdutosRepository produtoRepo;
     private final FuncionariosRepository funcionarioRepo;
-
-    @Autowired
-    public MovimentacaoService(MovimentacaoRepository movimentacaoRepo,
-                               ProdutosRepository produtoRepo,
-                               FuncionariosRepository funcionarioRepo) {
-        this.movimentacaoRepo = movimentacaoRepo;
-        this.produtoRepo = produtoRepo;
-        this.funcionarioRepo = funcionarioRepo;
-    }
+    private final MovimentacaoMapper mapper;
 
     @Transactional
     public Movimentacao registrar(MovimentacaoRequestDTO dto) {
-        Produtos product = produtoRepo.findById(dto.productId())
-                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+        Movimentacao mov = mapper.toEntity(dto);
+        
+        Produtos product = mov.getProduct();
 
-        Funcionarios employee = funcionarioRepo.findByRegistration(dto.employeeRegistration())
-                .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado"));
-
-        if (dto.type() == TipoMovimentacao.ENTRADA) {
-            product.setQuantity(product.getQuantity() + dto.quantity());
+        if (mov.getType() == TipoMovimentacao.ENTRADA) {
+            product.setQuantity(product.getQuantity() + mov.getQuantity());
         } else {
-            if (product.getQuantity() < dto.quantity()) {
+            if (product.getQuantity() < mov.getQuantity()) {
                 throw new IllegalArgumentException("Estoque insuficiente.");
             }
-            product.setQuantity(product.getQuantity() - dto.quantity());
+            product.setQuantity(product.getQuantity() - mov.getQuantity());
         }
 
         produtoRepo.save(product);
-
-        Movimentacao mov = new Movimentacao();
-        mov.setProduct(product);
-        mov.setEmployee(employee);
-        mov.setQuantity(dto.quantity());
-        mov.setType(dto.type());
-        mov.setDateRegister(java.time.LocalDateTime.now());
-
         return movimentacaoRepo.save(mov);
     }
 
@@ -94,7 +79,7 @@ public class MovimentacaoService {
 
         if (mov.getType() == TipoMovimentacao.ENTRADA) {
             if (product.getQuantity() < mov.getQuantity()) {
-                throw new IllegalArgumentException("Não é possível cancelar a entrada: estoque atual insuficiente para o estorno.");
+                throw new IllegalArgumentException("Não é possível cancelar a entrada: estoque insuficiente para o estorno.");
             }
             product.setQuantity(product.getQuantity() - mov.getQuantity());
         } else {

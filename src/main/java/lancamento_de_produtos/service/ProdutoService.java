@@ -3,22 +3,20 @@ package lancamento_de_produtos.service;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lancamento_de_produtos.dto.ProdutoRequestDTO;
+import lancamento_de_produtos.mapper.ProdutosMapper;
 import lancamento_de_produtos.model.entity.Produtos;
 import lancamento_de_produtos.repository.ProdutosRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ProdutoService {
     private final ProdutosRepository repository;
-
-    @Autowired
-    public ProdutoService(ProdutosRepository repository) {
-        this.repository = repository;
-    }
+    private final ProdutosMapper mapper;
 
     @Transactional
     public Produtos cadastrar(ProdutoRequestDTO dto) {
@@ -26,7 +24,7 @@ public class ProdutoService {
              throw new IllegalArgumentException("Produto já cadastrado com este nome.");
         }
 
-        Produtos prod = new Produtos();
+        Produtos prod = mapper.toEntity(dto);
 
         String codigoGerado;
         do {
@@ -34,12 +32,6 @@ public class ProdutoService {
         } while (repository.existsById(codigoGerado));
 
         prod.setCodigo(codigoGerado);
-        prod.setName(dto.name());
-        prod.setDescription(dto.description());
-        prod.setPriceCost(dto.priceCost());
-        prod.setPriceSale(dto.priceSale());
-        prod.setQuantity(dto.quantity());
-
         return repository.save(prod);
     }
 

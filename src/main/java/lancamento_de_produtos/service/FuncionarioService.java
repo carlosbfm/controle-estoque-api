@@ -2,28 +2,26 @@ package lancamento_de_produtos.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
 import lancamento_de_produtos.dto.FuncionarioRequestDTO;
+import lancamento_de_produtos.mapper.FuncionariosMapper;
 import lancamento_de_produtos.model.entity.Funcionarios;
 import lancamento_de_produtos.model.enums.CargoFuncionario;
 import lancamento_de_produtos.repository.FuncionariosRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class FuncionarioService {
     
     private final FuncionariosRepository repository;
-
-    @Autowired
-    public FuncionarioService(FuncionariosRepository repository) {
-        this.repository = repository;
-    }
+    private final FuncionariosMapper mapper;
 
     @Transactional
     public Funcionarios cadastrar(FuncionarioRequestDTO dto) {
-        Funcionarios func = new Funcionarios();
+        Funcionarios func = mapper.toEntity(dto);
         
         String matriculaGerada;
         do {
@@ -31,37 +29,12 @@ public class FuncionarioService {
         } while (repository.existsByRegistration(matriculaGerada));
 
         func.setRegistration(matriculaGerada);
-        func.setName(dto.name());
-        func.setPosition(dto.position());
-        func.setDateBirth(dto.dateBith());
 
         return repository.save(func);
     }
 
     @Transactional
-    public void atualizarPorPosicao(CargoFuncionario posicaoAlvo, FuncionarioRequestDTO dto) {
-        List<Funcionarios> listaFuncionarios = repository.findByPosition(posicaoAlvo);
-
-        if (listaFuncionarios.isEmpty()) {
-            throw new IllegalArgumentException("Nenhum funcionário encontrado com a posição: " + posicaoAlvo);
-        }
-
-        for (Funcionarios func : listaFuncionarios) {
-                if (dto.dateBith() != null) {
-                func.setDateBirth(dto.dateBith());
-            }
-
-            if (dto.name() != null && !dto.name().isBlank()) {
-                func.setName(dto.name());
-            }
-        }
-
-        repository.saveAll(listaFuncionarios);
-    }
-
-    @Transactional
     public Funcionarios atualizarPorMatricula(String matriculaAtual, FuncionarioRequestDTO dto) {
-        
         Funcionarios funcionario = repository.findByRegistration(matriculaAtual)
             .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado."));
 

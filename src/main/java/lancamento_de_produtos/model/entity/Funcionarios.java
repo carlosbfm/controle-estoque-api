@@ -10,13 +10,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lancamento_de_produtos.model.converter.CargoFuncionarioConverter;
 import lancamento_de_produtos.model.enums.CargoFuncionario;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "tb_funcionario")
-@Getter @Setter @NoArgsConstructor
+@Data
+@NoArgsConstructor
 public class Funcionarios {
 
     @Id
